@@ -150,7 +150,6 @@
       </div>
     </div>
 
-    <!-- Roleta de Comiss&atilde;o -->
     <div class="ev-card" style="--ec:#D4A017" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
       <img class="ev-card-img" src="asset/comi.jpg" alt="Roleta de Comiss&atilde;o" loading="lazy">
       <div class="ev-card-shade"></div>
@@ -184,7 +183,7 @@
         <div class="ev-card-detail">3 jackpots acima de 50x &middot; Sorteio 23h30</div>
         <div class="ev-card-prize">x200 aposta (POPBRA)</div>
       </div>
-    </div>
+    </div>                                
 
     <!-- Roleta de Anivers&aacute;rio -->
     <div class="ev-card" style="--ec:#E84393" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
@@ -324,6 +323,19 @@
   <div class="benefits-dots" id="benefits-dots"></div>
 </section>
 
+<section id="testimonial">
+  <div class="sh reveal">
+    <div><div class="sk">Comprovado na prática</div><h2 class="st">Testimonial dos Ganhadores</h2></div>
+  </div>
+  <div class="tm-wrap reveal">
+    <button class="tm-nav tm-prev" id="tm-prev" aria-label="Anterior">&#10094;</button>
+    <div class="tm-carousel" id="tm-carousel">
+      <div class="tm-track" id="tm-track"></div>
+    </div>
+    <button class="tm-nav tm-next" id="tm-next" aria-label="Próximo">&#10095;</button>
+  </div>
+</section>
+
 <section id="platforms">
   <div class="sh reveal">
     <div><div class="sk">Rede Completa</div><h2 class="st">Escolha sua plataforma</h2></div>
@@ -337,7 +349,7 @@
   </div>
   <div class="filters">
     <button class="fb active" data-f="all">Todas</button>
-    <button class="fb" data-f="10">Recarga R$10</button>
+    <button class="fb" data-f="10">Recarga R$10</button>     
     <button class="fb" data-f="20">Recarga R$20</button>
     <button class="fb" data-f="30">Recarga R$30</button>
   </div>
@@ -411,6 +423,11 @@
   </div>
 </div>
 
+<div class="tm-lightbox" id="tm-lightbox" onclick="closeTestimonialLightbox(event)">
+  <button class="tm-lightbox-close" type="button" aria-label="Fechar imagem" onclick="closeTestimonialLightbox()">&times;</button>
+  <img id="tm-lightbox-img" src="" alt="">
+</div>
+
 <footer>
   <div class="fg">
     <div><div class="fb-name">POP <span>REDE</span></div><p class="fdesc">Hub central oficial da rede POP. Acesso seguro e verificado para todos os membros cadastrados. Em operação desde 2022.</p></div>
@@ -481,21 +498,21 @@
     </a>
   </div>
   <div class="mob-nav-inner">
-    <a class="mob-nav-btn active" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});setMobActive(this);return false">
+    <a class="mob-nav-btn active" data-section="hero" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});setMobActive(this);return false">
       <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
       <span class="mob-nav-label">Início</span>
     </a>
-    <a class="mob-nav-btn" href="#platforms" onclick="setMobActive(this)">
-      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-      <span class="mob-nav-label">Plataformas</span>
-    </a>
-    <button class="mob-nav-btn" onclick="setMobActive(this);document.getElementById('eventos').scrollIntoView({behavior:'smooth'})">
+    <button class="mob-nav-btn" data-section="eventos" onclick="setMobActive(this);document.getElementById('eventos').scrollIntoView({behavior:'smooth'})">
       <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
       <span class="mob-nav-label">Eventos</span>
     </button>
-    <a class="mob-nav-btn" href="#beneficios" onclick="setMobActive(this)">
+    <a class="mob-nav-btn" data-section="beneficios" href="#beneficios" onclick="setMobActive(this)">
       <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>
       <span class="mob-nav-label">Benefícios</span>
+    </a>
+    <a class="mob-nav-btn" data-section="platforms" href="#platforms" onclick="setMobActive(this)">
+      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <span class="mob-nav-label">Plataformas</span>
     </a>
     <a class="mob-nav-btn cta-mob" href="https://t.me/PopRedeBot" target="_blank">
       <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>

@@ -535,6 +535,119 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   .benefits-dots{display:flex}
 }
 
+/* ── TESTIMONIAL GALLERY ───────────────────────────────────────── */
+#testimonial{background:var(--s);border-top:1px solid var(--border)}
+.tm-wrap{
+  position:relative;
+  max-width:1260px;
+  margin:0 auto;
+  padding:0 2.5rem;
+}
+.tm-carousel{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.35);
+}
+.tm-track{
+  display:grid;
+  grid-auto-flow:column;
+  grid-template-rows:repeat(2,1fr);
+  grid-auto-columns:clamp(120px,13vw,170px);
+  gap:4px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  padding:8px;
+}
+.tm-track::-webkit-scrollbar{display:none}
+.tm-item{
+  aspect-ratio:1/1;
+  border:1px solid rgba(255,255,255,.06);
+  background:var(--black);
+  padding:0;
+  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+}
+.tm-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  transition:transform .25s ease,filter .25s ease;
+}
+.tm-item:hover img{transform:scale(1.06);filter:brightness(1.06)}
+.tm-nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:34px;
+  height:70px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.55);
+  color:var(--text);
+  font-size:1rem;
+  cursor:pointer;
+  z-index:2;
+}
+.tm-prev{left:0}
+.tm-next{right:0}
+.tm-nav:hover{border-color:var(--red);color:var(--red)}
+
+.tm-lightbox{
+  position:fixed;
+  inset:0;
+  z-index:99998;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+}
+.tm-lightbox.on{display:flex}
+.tm-lightbox img{
+  max-width:92vw;
+  max-height:88vh;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  box-shadow:0 12px 45px rgba(0,0,0,.7);
+}
+.tm-lightbox-close{
+  position:absolute;
+  top:1rem;
+  right:1rem;
+  width:34px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(0,0,0,.65);
+  color:#fff;
+  font-size:1.35rem;
+  cursor:pointer;
+}
+
+@media(max-width:768px){
+  .tm-wrap{padding:0}
+  .tm-nav{
+    top:auto;
+    bottom:-2.15rem;
+    transform:none;
+    width:34px;
+    height:28px;
+    font-size:.8rem;
+  }
+  .tm-prev{left:0}
+  .tm-next{right:0}
+  .tm-track{
+    grid-auto-columns:clamp(96px,28vw,130px);
+    gap:3px;
+    padding:6px;
+  }
+  .tm-lightbox{padding:1rem}
+}
+
 /* POPBRA FOUNDER + POPBEA LATEST badges on cards */
 .card-crown{position:absolute;top:1rem;right:1rem;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;padding:.3rem .7rem;z-index:2}
 .crown-founder{background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.5);color:var(--gold)}
@@ -1374,7 +1487,17 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     transform:scale(.82);
     z-index:1;
   }
-  .ev-card-inner{padding:.6rem .7rem;gap:.22rem;border-left:none}
+  .ev-card-inner{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:2;
+    padding:.6rem .7rem;
+    gap:.22rem;
+    border-left:none;
+    background:linear-gradient(to top,rgba(13,13,13,.98) 0%,rgba(13,13,13,.86) 60%,rgba(13,13,13,.35) 100%);
+  }
   .ev-card-img{
     position:absolute;inset:0;
     width:100%;height:100%;
