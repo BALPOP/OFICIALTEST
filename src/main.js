@@ -785,21 +785,61 @@ setInterval(updateCountdowns,1000);
 // ── TESTIMONIAL GALLERY (winner carousel + lightbox) ───────────
 (function(){
   var track=document.getElementById('tm-track');
-  var carousel=document.getElementById('tm-carousel');
   var prevBtn=document.getElementById('tm-prev');
   var nextBtn=document.getElementById('tm-next');
   var lightbox=document.getElementById('tm-lightbox');
   var lightboxImg=document.getElementById('tm-lightbox-img');
-  if(!track||!carousel||!prevBtn||!nextBtn||!lightbox||!lightboxImg) return;
+  if(!track||!prevBtn||!nextBtn||!lightbox||!lightboxImg) return;
+
+  var TM_SCROLL_PX_PER_SEC=120;
 
   /* asset/winner: 1.webp plus Screenshot_1.webp … Screenshot_264.webp (265 images total). */
   var winnerImages=['asset/winner/1.webp'];
   for(var i=1;i<=264;i++) winnerImages.push('asset/winner/Screenshot_'+i+'.webp');
 
-  track.innerHTML=winnerImages.map(function(src,idx){
-    var label='Winner '+(idx+1);
-    return '<button class="tm-item" type="button" data-src="'+src+'" data-alt="'+label+'" aria-label="Abrir imagem '+(idx+1)+'"><img src="'+src+'" alt="'+label+'" loading="lazy"></button>';
-  }).join('');
+  /**
+   * Fisher–Yates shuffle — random order on each page load.
+   */
+  function shuffleInPlace(arr){
+    var a=arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j=Math.floor(Math.random()*(i+1));
+      var t=a[i];
+      a[i]=a[j];
+      a[j]=t;
+    }
+    return a;
+  }
+
+  /**
+   * Preload winner assets in batches (Image()) so scrolling hits warm cache.
+   */
+  function preloadImagesBatched(urls){
+    var idx=0;
+    var chunk=16;
+    function tick(){
+      var end=Math.min(idx+chunk,urls.length);
+      for(;idx<end;idx++){
+        var im=new Image();
+        im.src=urls[idx];
+      }
+      if(idx<urls.length) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  var shuffled=shuffleInPlace(winnerImages);
+  preloadImagesBatched(shuffled);
+
+  function buildItemsHtml(list){
+    return list.map(function(src,idx){
+      var label='Winner '+(idx+1);
+      return '<button class="tm-item" type="button" data-src="'+src+'" data-alt="'+label+'" aria-label="Abrir imagem '+(idx+1)+'"><img src="'+src+'" alt="'+label+'" loading="lazy" decoding="async"></button>';
+    }).join('');
+  }
+
+  /* Two identical runs for seamless loop (instant jump at half scrollWidth). */
+  track.innerHTML=buildItemsHtml(shuffled)+buildItemsHtml(shuffled);
 
   /* Horizontal scroll lives on .tm-track (overflow-x:auto); .tm-carousel is overflow:hidden — scroll track, not carousel. */
   function tmTrackGapPx(){
@@ -808,36 +848,73 @@ setInterval(updateCountdowns,1000);
     var n=parseFloat(g,10);
     return isNaN(n)?4:n;
   }
+
+  function loopHalfWidth(){
+    return track.scrollWidth/2;
+  }
+
+  /**
+   * Keeps current scroll position inside the first copy range.
+   * Runs from RAF/manual controls only (no scroll event feedback).
+   */
+  function normalizeSeamlessPosition(){
+    var half=loopHalfWidth();
+    if(half<8) return;
+    while(track.scrollLeft>=half-2) track.scrollLeft-=half;
+    while(track.scrollLeft<0) track.scrollLeft+=half;
+  }
+
   function scrollStep(dir){
     var first=track.querySelector('.tm-item');
     if(!first) return;
     var step=first.offsetWidth+tmTrackGapPx();
-    track.scrollBy({left:dir*step,behavior:'smooth'});
+    var half=loopHalfWidth();
+    if(dir<0&&track.scrollLeft<step+2){
+      track.scrollLeft=half-step;
+      normalizeSeamlessPosition();
+      return;
+    }
+    track.scrollLeft+=dir*step;
+    normalizeSeamlessPosition();
   }
 
   prevBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();scrollStep(-1);});
   nextBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();scrollStep(1);});
 
-  var autoTimer=null;
-  function startAuto(){
-    clearInterval(autoTimer);
-    autoTimer=setInterval(function(){
-      if(track.scrollLeft+track.clientWidth>=track.scrollWidth-8){
-        track.scrollTo({left:0,behavior:'smooth'});
-      } else {
-        scrollStep(1);
-      }
-    },2800);
+  track.style.scrollBehavior='auto';
+  var tmPaused=false;
+  var tmScrollFloat=track.scrollLeft;
+  var lastTmTick=performance.now();
+  function tickTmContinuous(now){
+    var dt=(now-lastTmTick)/1000;
+    if(dt>0.05) dt=0.05;
+    lastTmTick=now;
+    if(!tmPaused){
+      tmScrollFloat+=TM_SCROLL_PX_PER_SEC*dt;
+      track.scrollLeft=tmScrollFloat;
+      normalizeSeamlessPosition();
+      tmScrollFloat=track.scrollLeft;
+    } else {
+      normalizeSeamlessPosition();
+      tmScrollFloat=track.scrollLeft;
+    }
+    requestAnimationFrame(tickTmContinuous);
   }
-  startAuto();
+  requestAnimationFrame(tickTmContinuous);
   var tmWrap=prevBtn.closest('.tm-wrap');
-  function pauseAuto(){clearInterval(autoTimer);}
+  function pauseAuto(){tmPaused=true;}
+  function resumeAuto(){tmPaused=false;lastTmTick=performance.now();}
   if(tmWrap){
     tmWrap.addEventListener('mouseenter',pauseAuto);
-    tmWrap.addEventListener('mouseleave',startAuto);
+    tmWrap.addEventListener('mouseleave',resumeAuto);
   }
   track.addEventListener('touchstart',pauseAuto,{passive:true});
-  track.addEventListener('touchend',function(){setTimeout(startAuto,2400);},{passive:true});
+  track.addEventListener('touchend',function(){setTimeout(resumeAuto,900);},{passive:true});
+
+  window.addEventListener('resize',function(){
+    normalizeSeamlessPosition();
+    tmScrollFloat=track.scrollLeft;
+  });
 
   window.openTestimonialLightbox=function(src,alt){
     lightboxImg.src=src;

@@ -1434,7 +1434,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   display:none;
 }
 .ev-card-inner{
-  padding:.9rem 1rem;
+  padding-bottom:50px;
 
   display:flex;flex-direction:column;gap:.3rem;
   background:var(--s);
@@ -1515,7 +1515,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     position:relative;
     overflow:hidden;
     min-height:unset;
-    aspect-ratio:16/12;
+    aspect-ratio:16/14;
   }
   .ev-card,.ev-card.featured{
     position:absolute;
@@ -1589,7 +1589,6 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     display:flex!important;
     justify-content:center;
     gap:.5rem;
-    padding:1rem 0 .5rem;
   }
   .ev-board-dot{
     width:8px;height:8px;
