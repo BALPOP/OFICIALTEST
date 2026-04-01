@@ -250,6 +250,12 @@ const feedText=document.getElementById('feed-text');
 const feedDot=feedItem.querySelector('.feed-dot');
 const feedTrack=document.getElementById('feed-track');
 
+/**
+ * Runs the horizontal marquee on the live-feed line when text is wider than the visible wrap.
+ * Narrow screens have a smaller wrap, so overflow distance `max` is larger; we use a higher
+ * pixels-per-second rate there so duration matches the intended “faster” feel (and matches
+ * desktop tuning). `width: max-content` on `.feed-text` (CSS) keeps scrollWidth reliable on mobile WebKit.
+ */
 function scheduleFeedTextScroll(){
   if(!feedText) return;
   const wrap=feedText.parentElement;
@@ -261,7 +267,11 @@ function scheduleFeedTextScroll(){
     requestAnimationFrame(function(){
       const max=feedText.scrollWidth-wrap.clientWidth;
       if(max<=0) return;
-      var dur=Math.min(18,Math.max(9,max/100));
+      const narrow=typeof window.matchMedia==='function'&&window.matchMedia('(max-width:768px)').matches;
+      const pxPerSec=narrow?420:280;
+      const minDur=narrow?2:2.5;
+      const maxDur=narrow?5:6;
+      const dur=Math.min(maxDur,Math.max(minDur,max/pxPerSec));
       feedText.style.transition='transform '+dur+'s linear';
       feedText.style.transform='translateX(-'+max+'px)';
     });
@@ -313,6 +323,14 @@ setTimeout(()=>{
   nextFeed();
   setInterval(nextFeed, 4500);
 }, 800);
+
+let feedScrollResizeTimer;
+window.addEventListener('resize',function(){
+  clearTimeout(feedScrollResizeTimer);
+  feedScrollResizeTimer=setTimeout(function(){
+    if(feedItem&&feedItem.classList.contains('visible')) scheduleFeedTextScroll();
+  },120);
+});
 
 function cardClass(p){
   if(p.name==='POPBRA') return 'pcard card-founder';
@@ -465,9 +483,23 @@ function closeGate(){
 }
 function leaveGate(){ window.location.href='https://google.com'; }
 
+// ── SECTION ORDER (homepage flow) ──────────────────────────────
+(function(){
+  const hero=document.getElementById('hero');
+  if(!hero) return;
+  const order=['testimonial','beneficios','eventos','platforms','ecosystem'];
+  let prev=hero;
+  order.forEach(function(id){
+    const sec=document.getElementById(id);
+    if(!sec) return;
+    prev.insertAdjacentElement('afterend',sec);
+    prev=sec;
+  });
+})();
+
 // ── SCROLL TOP ─────────────────────────────────────────────────
 const scrollTopBtn=document.getElementById('scroll-top');
-const mobTrackedSections=['hero','platforms','eventos','beneficios'];
+const mobTrackedSections=['hero','testimonial','beneficios','eventos','platforms'];
 function getActiveMobileSection(){
   const trigger=Math.max(120,Math.round(window.innerHeight*0.38));
   let active='hero';
@@ -760,40 +792,52 @@ setInterval(updateCountdowns,1000);
   var lightboxImg=document.getElementById('tm-lightbox-img');
   if(!track||!carousel||!prevBtn||!nextBtn||!lightbox||!lightboxImg) return;
 
-  var winnerImages=['asset/winner/1.png'];
-  for(var i=1;i<=24;i++) winnerImages.push('asset/winner/Screenshot_'+i+'.png');
+  /* asset/winner: 1.webp plus Screenshot_1.webp … Screenshot_264.webp (265 images total). */
+  var winnerImages=['asset/winner/1.webp'];
+  for(var i=1;i<=264;i++) winnerImages.push('asset/winner/Screenshot_'+i+'.webp');
 
   track.innerHTML=winnerImages.map(function(src,idx){
     var label='Winner '+(idx+1);
     return '<button class="tm-item" type="button" data-src="'+src+'" data-alt="'+label+'" aria-label="Abrir imagem '+(idx+1)+'"><img src="'+src+'" alt="'+label+'" loading="lazy"></button>';
   }).join('');
 
+  /* Horizontal scroll lives on .tm-track (overflow-x:auto); .tm-carousel is overflow:hidden — scroll track, not carousel. */
+  function tmTrackGapPx(){
+    var g=getComputedStyle(track).gap;
+    if(!g||g==='normal') return 4;
+    var n=parseFloat(g,10);
+    return isNaN(n)?4:n;
+  }
   function scrollStep(dir){
     var first=track.querySelector('.tm-item');
     if(!first) return;
-    var step=first.offsetWidth+8;
-    carousel.scrollBy({left:dir*step,behavior:'smooth'});
+    var step=first.offsetWidth+tmTrackGapPx();
+    track.scrollBy({left:dir*step,behavior:'smooth'});
   }
 
-  prevBtn.addEventListener('click',function(){scrollStep(-1);});
-  nextBtn.addEventListener('click',function(){scrollStep(1);});
+  prevBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();scrollStep(-1);});
+  nextBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();scrollStep(1);});
 
   var autoTimer=null;
   function startAuto(){
     clearInterval(autoTimer);
     autoTimer=setInterval(function(){
-      if(carousel.scrollLeft+carousel.clientWidth>=carousel.scrollWidth-6){
-        carousel.scrollTo({left:0,behavior:'smooth'});
+      if(track.scrollLeft+track.clientWidth>=track.scrollWidth-8){
+        track.scrollTo({left:0,behavior:'smooth'});
       } else {
         scrollStep(1);
       }
     },2800);
   }
   startAuto();
-  carousel.addEventListener('mouseenter',function(){clearInterval(autoTimer);});
-  carousel.addEventListener('mouseleave',startAuto);
-  carousel.addEventListener('touchstart',function(){clearInterval(autoTimer);},{passive:true});
-  carousel.addEventListener('touchend',function(){setTimeout(startAuto,2400);},{passive:true});
+  var tmWrap=prevBtn.closest('.tm-wrap');
+  function pauseAuto(){clearInterval(autoTimer);}
+  if(tmWrap){
+    tmWrap.addEventListener('mouseenter',pauseAuto);
+    tmWrap.addEventListener('mouseleave',startAuto);
+  }
+  track.addEventListener('touchstart',pauseAuto,{passive:true});
+  track.addEventListener('touchend',function(){setTimeout(startAuto,2400);},{passive:true});
 
   window.openTestimonialLightbox=function(src,alt){
     lightboxImg.src=src;
@@ -903,6 +947,14 @@ setInterval(updateCountdowns,1000);
   if(!canvas) return;
   const ctx=canvas.getContext('2d');
   let W,H,particles=[];
+  function particleTarget(){
+    return window.innerWidth<=768 ? 44 : 100;
+  }
+  function syncParticleCount(){
+    const target=particleTarget();
+    while(particles.length<target) particles.push(new Particle());
+    if(particles.length>target) particles.length=target;
+  }
   
   // Make sure it takes the size of its PARENT container accurately
   function resize(){
@@ -912,7 +964,9 @@ setInterval(updateCountdowns,1000);
   }
   
   resize();
+  syncParticleCount();
   window.addEventListener('resize',resize);
+  window.addEventListener('resize',syncParticleCount);
   
   function Particle(startY){
     this.x=Math.random()*W;
@@ -929,8 +983,6 @@ setInterval(updateCountdowns,1000);
     this.x+=this.vx;this.y+=this.vy;
     this.alpha-=this.decay;
   };
-  
-  for(let i=0;i<100;i++){particles.push(new Particle());} 
   
   function draw(){
     // Use the parent's actual computed dimensions to check for changes
