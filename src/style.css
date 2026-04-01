@@ -1426,7 +1426,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   aspect-ratio:2 / 1;
   object-fit:cover;
   object-position:top;
-  filter:brightness(.45) saturate(.6) blur(3px);
+  filter:brightness(.8) saturate(1) blur(0);
   transition:filter .4s,transform .4s;
 }
 .ev-card:hover .ev-card-img{filter:brightness(.8) saturate(1) blur(0);transform:scale(1.03)}
@@ -1434,8 +1434,9 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   display:none;
 }
 .ev-card-inner{
+  padding-top:10px;
   padding-bottom:50px;
-
+  padding-left:10px;
   display:flex;flex-direction:column;gap:.3rem;
   background:var(--s);
   border-left:3px solid var(--ec,var(--red));
@@ -1556,6 +1557,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     background:var(--s);
     box-sizing:border-box;
     margin-top:0;
+    padding-left:15px;
   }
   /* flex-grow on the img was leaving a huge empty band under object-fit:contain — keep box = bitmap height */
   .ev-card-img{
