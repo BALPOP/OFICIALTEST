@@ -812,34 +812,53 @@ setInterval(updateCountdowns,1000);
   }
 
   /**
-   * Preload winner assets in batches (Image()) so scrolling hits warm cache.
+   * Preload winner assets in small chunks.
+   * We prioritize only near-term images first so initial paint stays fast.
    */
   function preloadImagesBatched(urls){
     var idx=0;
-    var chunk=16;
+    var chunk=6;
     function tick(){
       var end=Math.min(idx+chunk,urls.length);
       for(;idx<end;idx++){
         var im=new Image();
+        im.decoding='async';
         im.src=urls[idx];
       }
-      if(idx<urls.length) requestAnimationFrame(tick);
+      if(idx<urls.length){
+        if(typeof requestIdleCallback==='function'){
+          requestIdleCallback(tick,{timeout:600});
+        }else{
+          setTimeout(tick,80);
+        }
+      }
     }
-    requestAnimationFrame(tick);
+    setTimeout(tick,250);
   }
 
   var shuffled=shuffleInPlace(winnerImages);
-  preloadImagesBatched(shuffled);
+  var TM_EAGER_COUNT=14;
+  preloadImagesBatched(shuffled.slice(0,TM_EAGER_COUNT));
+  preloadImagesBatched(shuffled.slice(TM_EAGER_COUNT));
 
   function buildItemsHtml(list){
     return list.map(function(src,idx){
       var label='Winner '+(idx+1);
-      return '<button class="tm-item" type="button" data-src="'+src+'" data-alt="'+label+'" aria-label="Abrir imagem '+(idx+1)+'"><img src="'+src+'" alt="'+label+'" loading="lazy" decoding="async"></button>';
+      var eager=idx<TM_EAGER_COUNT;
+      var loading=eager?'eager':'lazy';
+      var fetchPriority=eager?'high':'low';
+      return '<button class="tm-item" type="button" data-src="'+src+'" data-alt="'+label+'" aria-label="Abrir imagem '+(idx+1)+'"><img src="'+src+'" alt="'+label+'" loading="'+loading+'" decoding="async" fetchpriority="'+fetchPriority+'"></button>';
     }).join('');
   }
 
   /* Two identical runs for seamless loop (instant jump at half scrollWidth). */
   track.innerHTML=buildItemsHtml(shuffled)+buildItemsHtml(shuffled);
+  track.addEventListener('error',function(ev){
+    var failedImg=ev.target;
+    if(!(failedImg instanceof HTMLImageElement)) return;
+    var item=failedImg.closest('.tm-item');
+    if(item) item.remove();
+  },true);
 
   /* Horizontal scroll lives on .tm-track (overflow-x:auto); .tm-carousel is overflow:hidden — scroll track, not carousel. */
   function tmTrackGapPx(){
