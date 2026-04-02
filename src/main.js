@@ -660,18 +660,21 @@ function syncBenefitDots() {
 
 function updateBCarousel() {
   if(!bCards.length) return;
+  const n = bCards.length;
   bCards.forEach((c, i) => {
     let pos = '';
     if(i === bIndex) pos = 'center';
-    else if(i === (bIndex - 1 + 3) % 3) pos = 'left';
-    else if(i === (bIndex + 1) % 3) pos = 'right';
+    else if(i === (bIndex - 1 + n) % n) pos = 'left';
+    else if(i === (bIndex + 1) % n) pos = 'right';
+    else pos = 'hidden';
     c.setAttribute('data-pos', pos);
   });
   syncBenefitDots();
 }
 
 function nextBCarousel() {
-  bIndex = (bIndex + 1) % 3;
+  const n = bCards.length || 1;
+  bIndex = (bIndex + 1) % n;
   updateBCarousel();
 }
 
