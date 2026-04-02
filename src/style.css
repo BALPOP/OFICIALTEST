@@ -539,6 +539,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   position:absolute;inset:0;width:100%;height:100%;z-index:0;
   overflow:hidden;background:var(--black);
   border-radius:3px;
+  border:2px solid var(--gold);
 }
 .benefit-img img{
   width:100%;height:100%;
@@ -1580,7 +1581,8 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     position:relative;
     overflow:hidden;
     min-height:unset;
-    aspect-ratio:16/14;
+    /* Taller than 16/14 so image+text fit; inner is flex-shrink:0 so text is never clipped */
+    aspect-ratio:16/17;
   }
   .ev-card,.ev-card.featured{
     position:absolute;
@@ -1611,7 +1613,8 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   .ev-card-inner{
     position:relative;
     z-index:2;
-    flex:1;
+    flex:0 0 auto;
+    flex-shrink:0;
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
@@ -1621,15 +1624,18 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     background: linear-gradient(180deg, var(--s2) 0%, var(--black) 100%);
     box-sizing:border-box;
     margin-top:0;
+    min-height:min-content;
   }
-  /* flex-grow on the img was leaving a huge empty band under object-fit:contain — keep box = bitmap height */
+  /* Image fills space above text; shrinks (min-height:0) so .ev-card-inner is never clipped */
   .ev-card-img{
     position:relative;
     z-index:1;
-    flex:0 0 auto;
+    flex:1 1 auto;
+    min-height:0;
     align-self:stretch;
     width:100%;
     height:auto;
+    max-height:100%;
     object-fit:contain;
     object-position:center top;
     filter:none;
@@ -1654,6 +1660,7 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     display:flex!important;
     justify-content:center;
     gap:.5rem;
+    padding-top:10px;
   }
   .ev-board-dot{
     width:8px;height:8px;
