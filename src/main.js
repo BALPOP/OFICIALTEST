@@ -479,8 +479,39 @@ function closeGate(){
   sessionStorage.setItem('age_ok','1');
   const g=document.getElementById('gate');
   g.style.opacity='0';g.style.transition='opacity .4s';
-  setTimeout(()=>{g.style.display='none';document.body.style.overflow='';document.querySelector('.float-btns').style.display='';},400);
+  setTimeout(()=>{
+    g.style.display='none';
+    document.body.style.overflow='';
+    document.querySelector('.float-btns').style.display='';
+    openYtWelcome();
+  },400);
 }
+
+/** YouTube welcome popup — /embed/live_stream + channel ID (not @handle or /streams page). Channel: UCnp57IKdyZlwBKOtWpxFiDg */
+const YT_WELCOME_EMBED='https://www.youtube.com/embed/live_stream?channel=UCnp57IKdyZlwBKOtWpxFiDg';
+function openYtWelcome(){
+  if(sessionStorage.getItem('yt_welcome_shown')) return;
+  sessionStorage.setItem('yt_welcome_shown','1');
+  const el=document.getElementById('yt-welcome-overlay');
+  const iframe=document.getElementById('yt-welcome-iframe');
+  if(!el||!iframe) return;
+  iframe.src=YT_WELCOME_EMBED;
+  el.classList.add('on');
+  document.body.style.overflow='hidden';
+}
+window.closeYtWelcome=function(ev){
+  if(ev&&ev.target!==document.getElementById('yt-welcome-overlay')) return;
+  const el=document.getElementById('yt-welcome-overlay');
+  const iframe=document.getElementById('yt-welcome-iframe');
+  if(el) el.classList.remove('on');
+  document.body.style.overflow='';
+  if(iframe) setTimeout(function(){ iframe.src=''; }, 280);
+};
+(function(){
+  if(sessionStorage.getItem('age_ok')){
+    setTimeout(function(){ openYtWelcome(); }, 700);
+  }
+})();
 function leaveGate(){ window.location.href='https://google.com'; }
 
 // ── SECTION ORDER (homepage flow) ──────────────────────────────
@@ -654,38 +685,13 @@ if(bGrid) {
 }
 
 window.handleBenefitClick = function(index) {
-  // If user clicks a side card, rotate to it.
   if (index !== bIndex) {
     bIndex = index;
     updateBCarousel();
-    // Don't open modal immediately if just rotating, or do both? 
-    // Let's do both since prompt says "click on any... show up a pop up"
   }
-  openBenefitModal(index);
-};
-
-window.openBenefitModal = function(index) {
   const card = bCards[index];
-  const title = card.getAttribute('data-title');
-  const link = card.getAttribute('data-link');
-  
-  document.getElementById('b-title').innerText = title;
-  document.getElementById('b-iframe').src = link;
-  
-  document.getElementById('benefit-overlay').classList.add('on');
-};
-
-window.closeBenefitModal = function() {
-  document.getElementById('benefit-overlay').classList.remove('on');
-  setTimeout(() => {
-    document.getElementById('b-iframe').src = '';
-  }, 300); 
-};
-
-window.handleBenefitOverlayClick = function(e) {
-  if(e.target === document.getElementById('benefit-overlay')) {
-    closeBenefitModal();
-  }
+  const link = card && card.getAttribute('data-link');
+  if (link) window.open(link, '_blank', 'noopener,noreferrer');
 };
 // ========================
 
@@ -1167,5 +1173,7 @@ document.addEventListener('keydown',function(e){
     closeEvPopup();
     closeModal();
     if(typeof closeTestimonialLightbox==='function') closeTestimonialLightbox();
+    var yt=document.getElementById('yt-welcome-overlay');
+    if(yt&&yt.classList.contains('on')) closeYtWelcome();
   }
 });
