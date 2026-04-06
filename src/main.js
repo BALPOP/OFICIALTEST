@@ -420,7 +420,7 @@ function openModal(name){
       onerror="this.parentElement.classList.add('no-logo');this.outerHTML='<span style=\\'font-family:Oswald,sans-serif;font-size:1.8rem;font-weight:700;color:${col}\\'>${p.name}</span>'"
       style="height:100%;max-width:200px;object-fit:contain;filter:drop-shadow(0 0 12px ${col}55)">`;
     const titleEl=document.getElementById('m-title');
-    if(titleEl) titleEl.textContent='◆ '+p.name;w
+    if(titleEl) titleEl.textContent='◆ '+p.name;
     const noticeEl=document.getElementById('m-notice');
     if(noticeEl) noticeEl.innerHTML=`Você está acessando <strong>${p.name}</strong> pelo hub oficial POP REDE. Recarga mínima <strong>R$ ${p.r}</strong>.`;
     const confirmBtn=document.querySelector('.m-confirm');
@@ -483,42 +483,15 @@ function closeGate(){
     g.style.display='none';
     document.body.style.overflow='';
     document.querySelector('.float-btns').style.display='';
-    openYtWelcome();
   },400);
 }
-
-/** YouTube welcome popup — /embed/live_stream + channel ID (not @handle or /streams page). Channel: UCnp57IKdyZlwBKOtWpxFiDg */
-const YT_WELCOME_EMBED='https://www.youtube.com/embed/live_stream?channel=UCnp57IKdyZlwBKOtWpxFiDg';
-function openYtWelcome(){
-  if(sessionStorage.getItem('yt_welcome_shown')) return;
-  sessionStorage.setItem('yt_welcome_shown','1');
-  const el=document.getElementById('yt-welcome-overlay');
-  const iframe=document.getElementById('yt-welcome-iframe');
-  if(!el||!iframe) return;
-  iframe.src=YT_WELCOME_EMBED;
-  el.classList.add('on');
-  document.body.style.overflow='hidden';
-}
-window.closeYtWelcome=function(ev){
-  if(ev&&ev.target!==document.getElementById('yt-welcome-overlay')) return;
-  const el=document.getElementById('yt-welcome-overlay');
-  const iframe=document.getElementById('yt-welcome-iframe');
-  if(el) el.classList.remove('on');
-  document.body.style.overflow='';
-  if(iframe) setTimeout(function(){ iframe.src=''; }, 280);
-};
-(function(){
-  if(sessionStorage.getItem('age_ok')){
-    setTimeout(function(){ openYtWelcome(); }, 700);
-  }
-})();
 function leaveGate(){ window.location.href='https://google.com'; }
 
 // ── SECTION ORDER (homepage flow) ──────────────────────────────
 (function(){
   const hero=document.getElementById('hero');
   if(!hero) return;
-  const order=['testimonial','beneficios','eventos','platforms','ecosystem'];
+  const order=['beneficios','eventos','platforms','ecosystem'];
   let prev=hero;
   order.forEach(function(id){
     const sec=document.getElementById(id);
@@ -530,7 +503,7 @@ function leaveGate(){ window.location.href='https://google.com'; }
 
 // ── SCROLL TOP ─────────────────────────────────────────────────
 const scrollTopBtn=document.getElementById('scroll-top');
-const mobTrackedSections=['hero','testimonial','beneficios','eventos','platforms'];
+const mobTrackedSections=['hero','beneficios','ganhadores-gallery','eventos','platforms'];
 function getActiveMobileSection(){
   const trigger=Math.max(120,Math.round(window.innerHeight*0.38));
   let active='hero';
@@ -561,64 +534,6 @@ function setMobActive(el){
   el.classList.add('active');
 }
 
-
-
-// ── EVENT SLIDER ────────────────────────────────────────────────
-(function(){
-  const track=document.getElementById('ev-track');
-  if(!track) return;
-  const dotsEl=document.getElementById('ev-dots');
-  const slides=track.querySelectorAll('.ev-slide');
-  let current=0;
-  const total=slides.length;
-
-  // Build dots
-  for(let i=0;i<total;i++){
-    const d=document.createElement('button');
-    d.className='ev-dot'+(i===0?' active':'');
-    d.setAttribute('aria-label','Slide '+(i+1));
-    d.onclick=(function(idx){return function(){goTo(idx);};})(i);
-    dotsEl.appendChild(d);
-  }
-
-  function updateDots(idx){
-    dotsEl.querySelectorAll('.ev-dot').forEach(function(d,i){
-      d.classList.toggle('active',i===idx);
-    });
-  }
-  function goTo(idx){
-    if(idx<0) idx=total-1;
-    if(idx>=total) idx=0;
-    current=idx;
-    // Scroll only inside the track — never move the page
-    track.scrollTo({left:slides[idx].offsetLeft,behavior:'smooth'});
-    updateDots(idx);
-  }
-  window.evCarousel=function(dir){goTo(current+dir);};
-
-  // Sync dots on scroll
-  let ticking=false;
-  track.addEventListener('scroll',function(){
-    if(!ticking){
-      requestAnimationFrame(function(){
-        const sw=slides[0]?slides[0].offsetWidth:1;
-        const idx=Math.round(track.scrollLeft/sw);
-        if(idx!==current){current=idx;updateDots(idx);}
-        ticking=false;
-      });
-      ticking=true;
-    }
-  },{passive:true});
-
-  // Auto-advance every 3.5s — pauses when user touches or hovers the carousel
-  var autoTimer=setInterval(function(){goTo(current+1);},3500);
-  function pauseAuto(){clearInterval(autoTimer);}
-  function resumeAuto(){clearInterval(autoTimer);autoTimer=setInterval(function(){goTo(current+1);},3500);}
-  track.addEventListener('mouseenter',pauseAuto);
-  track.addEventListener('touchstart',pauseAuto,{passive:true});
-  track.addEventListener('mouseleave',resumeAuto);
-  track.addEventListener('touchend',function(){setTimeout(resumeAuto,4000);},{passive:true});
-})();
 
 // ── ANIMATED COUNTERS ──────────────────────────────────────────
 function animateCounter(el,target,duration){
@@ -677,14 +592,42 @@ function nextBCarousel() {
   bIndex = (bIndex + 1) % n;
   updateBCarousel();
 }
+function prevBCarousel() {
+  const n = bCards.length || 1;
+  bIndex = (bIndex - 1 + n) % n;
+  updateBCarousel();
+}
 
 const bGrid = document.getElementById('b-carousel');
-if(bGrid) {
+const bPrevBtn = document.getElementById('benefits-prev');
+const bNextBtn = document.getElementById('benefits-next');
+function restartBenefitTimer() {
+  if (!bGrid) return;
+  clearInterval(bTimer);
   bTimer = setInterval(nextBCarousel, 3500);
+}
+if(bGrid) {
+  restartBenefitTimer();
   bGrid.addEventListener('mouseenter', () => clearInterval(bTimer));
-  bGrid.addEventListener('mouseleave', () => bTimer = setInterval(nextBCarousel, 3500));
+  bGrid.addEventListener('mouseleave', restartBenefitTimer);
   bGrid.scrollLeft = 0;
   updateBCarousel();
+}
+if (bPrevBtn) {
+  bPrevBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    prevBCarousel();
+    restartBenefitTimer();
+  });
+}
+if (bNextBtn) {
+  bNextBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    nextBCarousel();
+    restartBenefitTimer();
+  });
 }
 
 window.handleBenefitClick = function(index) {
@@ -910,7 +853,8 @@ setInterval(updateCountdowns,1000);
   nextBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();scrollStep(1);});
 
   track.style.scrollBehavior='auto';
-  var tmPaused=false;
+  var TM_INITIAL_IDLE_MS=5000;
+  var tmPaused=true;
   var tmScrollFloat=track.scrollLeft;
   var lastTmTick=performance.now();
   function tickTmContinuous(now){
@@ -932,6 +876,7 @@ setInterval(updateCountdowns,1000);
   var tmWrap=prevBtn.closest('.tm-wrap');
   function pauseAuto(){tmPaused=true;}
   function resumeAuto(){tmPaused=false;lastTmTick=performance.now();}
+  setTimeout(resumeAuto,TM_INITIAL_IDLE_MS);
   if(tmWrap){
     tmWrap.addEventListener('mouseenter',pauseAuto);
     tmWrap.addEventListener('mouseleave',resumeAuto);
@@ -964,19 +909,22 @@ setInterval(updateCountdowns,1000);
   });
 })();
 
-// ── EVENT BOARD MOBILE CAROUSEL (pop in / pop out) ─────────────
+// ── EVENT BOARD CAROUSEL (one slide at a time) ──────────────────
 (function(){
   var board=document.querySelector('.ev-board');
   var dotsWrap=document.getElementById('ev-board-dots');
+  var prevBtn=document.getElementById('ev-prev');
+  var nextBtn=document.getElementById('ev-next');
   if(!board||!dotsWrap) return;
   var cards=board.querySelectorAll('.ev-card');
   var total=cards.length;
   if(!total) return;
 
-  // Build dots
   for(var i=0;i<total;i++){
     var d=document.createElement('div');
     d.className='ev-board-dot'+(i===0?' active':'');
+    d.setAttribute('role','button');
+    d.setAttribute('aria-label','Evento '+(i+1));
     d.addEventListener('click',(function(idx){return function(){goTo(idx);};})(i));
     dotsWrap.appendChild(d);
   }
@@ -992,10 +940,8 @@ setInterval(updateCountdowns,1000);
     if(idx<0) idx=total-1;
     if(idx>=total) idx=0;
     animating=true;
-    // Pop out current
     cards[current].classList.remove('ev-active');
     cards[current].classList.add('ev-pop-out');
-    // Pop in next
     cards[idx].classList.add('ev-active');
     var prev=current;
     current=idx;
@@ -1007,23 +953,22 @@ setInterval(updateCountdowns,1000);
     resetAuto();
   }
 
-  // Init: first card active
-  function initMobile(){
+  function init(){
     cards.forEach(function(c){c.classList.remove('ev-active','ev-pop-out');});
     cards[0].classList.add('ev-active');
-    current=0;updateDots(0);animating=false;
+    current=0;
+    updateDots(0);
+    animating=false;
   }
 
-  // Auto-slide every 3.5s
   function startAuto(){
-    autoTimer=setInterval(function(){
-      if(window.innerWidth>768) return;
-      goTo((current+1)%total);
-    },3500);
+    autoTimer=setInterval(function(){goTo((current+1)%total);},3500);
   }
   function resetAuto(){clearInterval(autoTimer);startAuto();}
 
-  // Swipe detection
+  if(prevBtn) prevBtn.addEventListener('click',function(e){e.preventDefault();goTo((current-1+total)%total);});
+  if(nextBtn) nextBtn.addEventListener('click',function(e){e.preventDefault();goTo((current+1)%total);});
+
   var touchX=0;
   board.addEventListener('touchstart',function(e){
     clearInterval(autoTimer);
@@ -1038,17 +983,19 @@ setInterval(updateCountdowns,1000);
     setTimeout(resetAuto,3000);
   },{passive:true});
 
-  function checkMobile(){
-    if(window.innerWidth<=768){initMobile();startAuto();}
-    else{clearInterval(autoTimer);cards.forEach(function(c){c.classList.remove('ev-active','ev-pop-out');});}
+  var wrap=board.closest('.ev-carousel-wrap');
+  if(wrap){
+    wrap.addEventListener('mouseenter',function(){clearInterval(autoTimer);});
+    wrap.addEventListener('mouseleave',resetAuto);
   }
-  checkMobile();
-  window.addEventListener('resize',function(){clearInterval(autoTimer);animating=false;checkMobile();});
+
+  init();
+  startAuto();
+  window.addEventListener('resize',function(){animating=false;});
 })();
 
-// ── PARTICLES ──────────────────────────────────────────────────
-(function(){
-  const canvas=document.getElementById('particles-canvas');
+// ── PARTICLES (hero + #eventos — same behaviour as hero-inner ambience) ─
+function initParticleCanvas(canvas){
   if(!canvas) return;
   const ctx=canvas.getContext('2d');
   let W,H,particles=[];
@@ -1060,63 +1007,54 @@ setInterval(updateCountdowns,1000);
     while(particles.length<target) particles.push(new Particle());
     if(particles.length>target) particles.length=target;
   }
-  
-  // Make sure it takes the size of its PARENT container accurately
   function resize(){
-    const parent = canvas.parentElement;
+    const parent=canvas.parentElement;
+    if(!parent) return;
     W=canvas.width=parent.offsetWidth;
     H=canvas.height=parent.offsetHeight;
   }
-  
-  resize();
-  syncParticleCount();
-  window.addEventListener('resize',resize);
-  window.addEventListener('resize',syncParticleCount);
-  
   function Particle(startY){
     this.x=Math.random()*W;
-    this.y=startY !== undefined ? startY : Math.random()*H;
-    this.r=Math.random()*2.0+1.0; 
+    this.y=startY!==undefined?startY:Math.random()*H;
+    this.r=Math.random()*2.0+1.0;
     this.vx=(Math.random()-.5)*0.3;
-    this.vy=Math.random()*0.6+0.2; 
-    this.alpha=Math.random()*0.8+0.2; 
+    this.vy=Math.random()*0.6+0.2;
+    this.alpha=Math.random()*0.8+0.2;
     this.decay=Math.random()*0.003+0.001;
     const isRed=Math.random()<0.6;
-    this.colorPrefix=isRed ? 'rgba(255,70,70,' : 'rgba(255,200,80,';
+    this.colorPrefix=isRed?'rgba(255,70,70,':'rgba(255,200,80,';
   }
   Particle.prototype.update=function(){
     this.x+=this.vx;this.y+=this.vy;
     this.alpha-=this.decay;
   };
-  
   function draw(){
-    // Use the parent's actual computed dimensions to check for changes
-    if(canvas.parentElement && (canvas.width !== canvas.parentElement.offsetWidth || canvas.height !== canvas.parentElement.offsetHeight)){
+    if(canvas.parentElement&&(canvas.width!==canvas.parentElement.offsetWidth||canvas.height!==canvas.parentElement.offsetHeight)){
       resize();
     }
-    
     ctx.clearRect(0,0,W,H);
     particles.forEach(function(p,i){
       p.update();
       ctx.beginPath();
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle = p.colorPrefix + Math.max(0, p.alpha) + ')';
+      ctx.fillStyle=p.colorPrefix+Math.max(0,p.alpha)+')';
       ctx.fill();
-      if(p.alpha<=0 || p.y > H + 10) {
+      if(p.alpha<=0||p.y>H+10){
         particles[i]=new Particle(-Math.random()*20);
-        // Important: When respawning, ensure its X is recalculated based on the CURRENT W, 
-        // in case the screen was resized while the particle was alive.
-        particles[i].x = Math.random() * W; 
+        particles[i].x=Math.random()*W;
       }
     });
     requestAnimationFrame(draw);
   }
-  
-  // Also delay initial sizing by a tick to ensure CSS has applied
-  setTimeout(resize, 100);
-  
+  resize();
+  syncParticleCount();
+  window.addEventListener('resize',resize);
+  window.addEventListener('resize',syncParticleCount);
+  setTimeout(resize,100);
   draw();
-})();
+}
+initParticleCanvas(document.getElementById('particles-canvas'));
+initParticleCanvas(document.getElementById('eventos-particles-canvas'));
 
 // ── HOT BADGE (daily seed) ──────────────────────────────────────
 (function(){
@@ -1176,7 +1114,5 @@ document.addEventListener('keydown',function(e){
     closeEvPopup();
     closeModal();
     if(typeof closeTestimonialLightbox==='function') closeTestimonialLightbox();
-    var yt=document.getElementById('yt-welcome-overlay');
-    if(yt&&yt.classList.contains('on')) closeYtWelcome();
   }
 });
