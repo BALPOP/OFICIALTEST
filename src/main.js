@@ -21,11 +21,13 @@ const platformColors={
   POPCEU:'#2E86C1',POPN1:'#9B59B6',POP888:'#C0392B',POPLUA:'#3498DB',
   POPBOA:'#2980B9',POPVAI:'#8E44AD',POPKKK:'#D4A017',POPWB:'#C0392B',
   POPDEZ:'#E67E22',POPLUZ:'#9B59B6',POP678:'#E74C3C',
-  POPMEL:'#F39C12',POPFLU:'#27AE60',POPZOE:'#3498DB'
+  POPMEL:'#F39C12',POPFLU:'#27AE60',POPZOE:'#3498DB',
+  POPFOI:'#0891B2'
 };
 
 const platforms=[
   {name:'POPBRA', launch:'2022-03-22', date:'22 Mar 2022',r:'30',w:'50', logo:'asset/bra.png', url:'https://popbra.com'},
+  {name:'POPFOI', launch:'2026-04-07', date:'07 Abr 2026',r:'20',w:'30', logo:'asset/foi.png', url:'https://popfoi.com'},
   {name:'POPBEA', launch:'2026-03-23', date:'23 Mar 2026',r:'20',w:'30', logo:'asset/bea.png', url:'https://popbea.com'},
   {name:'POPPG', launch:'2024-03-08',  date:'08 Mar 2024',r:'20',w:'50', logo:'asset/pg.png',  url:'https://poppg.com'},
   {name:'POPBEM', launch:'2025-04-21', date:'21 Abr 2025',r:'20',w:'30', logo:'asset/bem.png', url:'https://popbem.com'},
@@ -92,7 +94,7 @@ document.getElementById('sc-chips').innerHTML=platforms.map(p=>`
 })();
 
 // Live Activity Feed
-const plats=['POPBRA','POPPG','POPBEM','POPBIS','POPSUR','26BET','POP555','POPCEU','POPN1','POPBEA','POP888','POPLUA','POPBOA','POPVAI','POPKKK','POPWB','POPDEZ','POPLUZ','POP678','POPMEL','POPFLU','POPZOE'];
+const plats=['POPBRA','POPFOI','POPPG','POPBEM','POPBIS','POPSUR','26BET','POP555','POPCEU','POPN1','POPBEA','POP888','POPLUA','POPBOA','POPVAI','POPKKK','POPWB','POPDEZ','POPLUZ','POP678','POPMEL','POPFLU','POPZOE'];
 const states=['SP','RJ','MG','BA','PR','RS','PE','CE','GO','SC','AM','PA'];
 function rp(arr){return arr[Math.floor(Math.random()*arr.length)];}
 function ramt(){const vals=[20,30,50,80,100,150,200,300,500];return vals[Math.floor(Math.random()*vals.length)];}
@@ -113,12 +115,12 @@ function rGame(){return jackpotGames[Math.floor(Math.random()*jackpotGames.lengt
 const feedTemplates=(() => {
   // ── ID generators by platform format ────────────────────────────
   // Short numeric (4-7 digits): POPBRA, POP888, POP678, POPPG, POP555, POPLUA, POPBEM, POPCEU
-  const shortPlats = ['POPBRA','POP888','POP678','POPPG','POP555','POPLUA','POPBEM','POPCEU'];
+  const shortPlats = ['POPBRA','POP888','POP678','POPPG','POP555','POPLUA','POPBEM','POPCEU','POPFOI'];
   function shortId(plat) {
     const ranges = {
       POPBRA:[20000,2900000], POP888:[10000,800000], POP678:[3000,400000],
       POPPG:[4000,410000], POP555:[100000,450000], POPLUA:[100000,340000],
-      POPBEM:[100000,310000], POPCEU:[100000,270000]
+      POPBEM:[100000,310000], POPCEU:[100000,270000], POPFOI:[100000,350000]
     };
     const [lo,hi] = ranges[plat]||[10000,999999];
     return Math.floor(Math.random()*(hi-lo)+lo).toString();
@@ -380,10 +382,10 @@ function renderCards(data){
   }).join('');
 }
 
-// Shuffle everything after POPBRA and POPBEA
+// Shuffle everything after POPBRA, POPFOI and POPBEA
 function getShuffled(){
-  const top = platforms.slice(0,2);
-  const rest = platforms.slice(2);
+  const top = platforms.slice(0,3);
+  const rest = platforms.slice(3);
   for(let i=rest.length-1;i>0;i--){
     const j=Math.floor(Math.random()*(i+1));
     [rest[i],rest[j]]=[rest[j],rest[i]];
@@ -398,8 +400,8 @@ document.querySelectorAll('.fb').forEach(btn=>{
     this.classList.add('active');
     const f=this.dataset.f;
     const filtered = f==='all' ? getShuffled() : (() => {
-  const top=platforms.slice(0,2).filter(p=>p.r===f);
-  const rest=platforms.slice(2).filter(p=>p.r===f);
+  const top=platforms.slice(0,3).filter(p=>p.r===f);
+  const rest=platforms.slice(3).filter(p=>p.r===f);
   for(let i=rest.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rest[i],rest[j]]=[rest[j],rest[i]];}
   return [...top,...rest];
 })();
@@ -1067,8 +1069,8 @@ initParticleCanvas(document.getElementById('eventos-particles-canvas'));
   let attempt=0;
   while(hotSet.size<hotCount && attempt<200){
     const idx=Math.floor(seededRand(seed+attempt++)*total);
-    // Never make POPBRA or POPBEA hot (they have their own badge)
-    if(idx>=2) hotSet.add(idx);
+    // Never make POPBRA, POPFOI or POPBEA hot (they have their own badge)
+    if(idx>=3) hotSet.add(idx);
   }
   platforms.forEach(function(p,i){p._hot=hotSet.has(i);});
 })();
@@ -1076,12 +1078,12 @@ initParticleCanvas(document.getElementById('eventos-particles-canvas'));
 // Patch cardClass and crownBadge for hot
 const _origCardClass=cardClass;
 cardClass=function(p){
-  if(p._hot && p.name!=='POPBRA' && p.name!=='POPBEA') return _origCardClass(p)+' card-hot';
+  if(p._hot && p.name!=='POPBRA' && p.name!=='POPFOI' && p.name!=='POPBEA') return _origCardClass(p)+' card-hot';
   return _origCardClass(p);
 };
 const _origCrown=crownBadge;
 crownBadge=function(p){
-  if(p._hot && p.name!=='POPBRA' && p.name!=='POPBEA') return '<div class="card-crown crown-hot">🔥 Hot</div>';
+  if(p._hot && p.name!=='POPBRA' && p.name!=='POPFOI' && p.name!=='POPBEA') return '<div class="card-crown crown-hot">🔥 Hot</div>';
   return _origCrown(p);
 };
 
