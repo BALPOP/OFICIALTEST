@@ -493,7 +493,7 @@ function leaveGate(){ window.location.href='https://google.com'; }
 (function(){
   const hero=document.getElementById('hero');
   if(!hero) return;
-  const order=['beneficios','eventos','platforms','ecosystem'];
+  const order=['beneficios','eventos','platforms','mentores-embed','ecosystem'];
   let prev=hero;
   order.forEach(function(id){
     const sec=document.getElementById(id);
@@ -505,7 +505,7 @@ function leaveGate(){ window.location.href='https://google.com'; }
 
 // ── SCROLL TOP ─────────────────────────────────────────────────
 const scrollTopBtn=document.getElementById('scroll-top');
-const mobTrackedSections=['hero','beneficios','ganhadores-gallery','eventos','platforms'];
+const mobTrackedSections=['hero','beneficios','eventos','platforms'];
 function getActiveMobileSection(){
   const trigger=Math.max(120,Math.round(window.innerHeight*0.38));
   let active='hero';
