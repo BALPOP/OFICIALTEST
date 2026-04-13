@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POP REDE — Oficial</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="gate-18"><span class="gate-num">18</span><span class="gate-plus">+</span></div>
+    <div class="gate-title">Confirmação de Idade</div>
+    <p class="gate-desc">Esta plataforma contém conteúdo destinado exclusivamente a maiores de 18 anos. Confirme sua idade para continuar.</p>
+    <div class="gate-btns">
+      <button class="gate-no" onclick="leaveGate()">Tenho menos de 18</button>
+      <button class="gate-yes" onclick="closeGate()">Tenho 18 anos ou mais</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-main">
+    <div class="logo"><div class="logo-box">PR</div><span class="logo-text">POP <span>REDE</span></span></div>
+    <ul class="nav-links">
+      <li><a href="#beneficios">Benefícios</a></li>
+      <li><a href="#eventos">Eventos</a></li>
+      <li><a href="#platforms">Plataformas</a></li>
+      <li><a href="#ecosystem">Ecossistema</a></li>
+      <li><a href="#trust">Segurança</a></li>
+    </ul>
+    <button class="events-trigger" onclick="openEvPopup()">🎉 Eventos Especiais</button><button class="nav-cta" onclick="document.getElementById('platforms').scrollIntoView({behavior:'smooth'})">Plataformas →</button>
+  </div>
+  <div class="live-feed"><div class="live-feed-label"><div class="live-feed-label-dot"></div><span>Ao Vivo</span></div><div class="live-feed-panel"><div class="feed-track" id="feed-track"><div class="feed-item" id="feed-item"><div class="feed-dot green"></div><div class="feed-text-wrap"><span class="feed-text" id="feed-text"></span></div></div></div></div></div>
+</nav>
+
+<div class="founder-bar">
+  <div class="founder-bar-item">⭐ <strong>POPBRA</strong> — Plataforma Original desde 22 Mar 2022</div>
+  <div class="founder-bar-sep"></div>
+  <div class="founder-bar-item">🆕 <strong>POPBEA</strong> — Mais Nova da Rede · Lançada em 23 Mar 2026</div>
+  <div class="founder-bar-sep"></div>
+  <div class="founder-bar-item">📡 <strong>PopRTP.com</strong> — Análise de RTP em Tempo Real</div>
+</div>
+<section id="hero">
+  <canvas id="particles-canvas"></canvas><div class="hero-bg"></div><div class="hero-grid"></div><div class="hero-vignette"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag"><div class="tag-dot"></div><span>Oficial — Rede Ativa</span></div>
+      <h1 class="hero-title">Bem-vindo à<span class="acc">POP REDE</span><span class="sub-gold">Uma rede. Múltiplas plataformas.</span></h1>
+      <p class="hero-sub">Central de acesso para <strong>23 plataformas ativas</strong> no Brasil. Verifique os limites, acesse com segurança e opere com confiança no maior ecossistema da rede POP.</p>
+      <div class="hero-btns">
+        <button class="btn-red" onclick="document.getElementById('platforms').scrollIntoView({behavior:'smooth'})"><span>▶ ENTRAR NA REDE</span></button>
+        <button class="btn-ghost" onclick="document.getElementById('eventos').scrollIntoView({behavior:'smooth'})">Ver Eventos</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="showcase">
+        <div class="sc-label">Plataformas ativas</div>
+        <div class="sc-chips" id="sc-chips"></div>
+        <div class="sc-footer">
+          <div><div class="big-n">23</div><div class="big-n-label">Plataformas</div></div>
+          <div class="online-badge"><div class="tag-dot"></div> Todos Online</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="trust">
+    <div class="sh reveal">
+      <div><div class="sk">Por que confiar</div></div>
+    </div>
+    <div class="tgrid reveal">
+      <div class="tcell">
+        <div class="t-num">500K+</div>
+        <div class="t-title">Membros Ativos</div>
+        <p class="t-desc">Milhares de membros operando diariamente com segurança dentro da rede POP.</p>
+      </div>
+      <div class="tcell">
+        <div class="t-num">SSL</div>
+        <div class="t-title">Seguro &amp; Verificado</div>
+        <p class="t-desc">Criptografia ponta a ponta, monitoramento 24h e antifraude ativo.</p>
+      </div>
+      <div class="tcell">
+        <div class="t-num">24/7</div>
+        <div class="t-title">Suporte Disponível</div>
+        <p class="t-desc">Equipe dedicada pronta para atender. Nenhuma dúvida fica sem resposta.</p>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-ind"><div class="scroll-ind-t">SCROLL</div><div class="scroll-ind-l"></div></div>
+</section>
+
+<section id="eventos">
+  <canvas id="eventos-particles-canvas" aria-hidden="true"></canvas>
+  <div class="eventos-bg" aria-hidden="true"></div>
+  <div class="eventos-grid" aria-hidden="true"></div>
+  <div class="eventos-vignette" aria-hidden="true"></div>
+  <div class="ev-container">
+  <div class="sh reveal">
+    <div><div class="sk">Grupo VIP &mdash; Rede POP</div><h2 class="st">Eventos Ativas</h2></div>
+  </div>
+
+  <!-- ══ EVENT BOARD — carousel, one event per slide ═══════════ -->
+  <div class="ev-carousel-wrap reveal">
+    <button class="ev-nav ev-prev" id="ev-prev" type="button" aria-label="Evento anterior">&#10094;</button>
+    <div class="ev-board" id="ev-board">
+
+    <!-- ★ Roda da Fortuna — Featured -->
+    <div class="ev-card featured" style="--ec:#CC0000" onclick="window.open('https://t.me/PopRedeBot','_blank')">
+      <img class="ev-card-img" src="asset/rodadafortuna.jpg" alt="Roda da Fortuna" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#ff5555;border-color:rgba(204,0,0,.5);background:rgba(204,0,0,.15)">&#x1F3C6; Semanal &middot; <span class="ev-live-dot" style="display:inline-block;vertical-align:middle;margin:0 .15rem"></span>Ativo</span>
+        <h3 class="ev-card-name">Roda da Fortuna</h3>
+        <div class="ev-card-detail">Live &middot; 50 ganhadores &middot; iPhone 17 Pro Max</div>
+        <div class="ev-card-cd ev-countdown" data-target-weekday="0" data-target-hour="17" data-target-min="0" data-repeat="weekly">&#9201; <span class="ev-cd-num">--</span>d <span class="ev-cd-num">--</span>h <span class="ev-cd-num">--</span>m</div>
+        <div class="ev-card-go">&#9654; PARTICIPAR &rarr;</div>
+      </div>
+    </div>
+
+    <!-- ★ Roleta da Gratid&atilde;o — Featured -->
+    <div class="ev-card featured" style="--ec:#22C55E" onclick="openSpecialEvent(1)">
+      <img class="ev-card-img" src="asset/gratid.jpg" alt="Roleta da Gratid&atilde;o" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#22C55E;border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.15)">&#x1F195; Especial &middot; VIP</span>
+        <h3 class="ev-card-name">Roleta da Gratid&atilde;o</h3>
+        <div class="ev-card-detail">Evento VIP &middot; 50 ganhadores &middot; iPhone 17 Pro Max</div>
+        <div class="ev-card-prize">M&iacute;n. 5.000 EXP &middot; VIP 1&ndash;3</div>
+        <div class="ev-card-go" style="color:#22C55E">&#9654; VER DETALHES &rarr;</div>
+      </div>
+    </div>
+
+    <!-- ★ Roleta Fidelidade — Featured -->
+    <div class="ev-card featured" style="--ec:#3B82F6" onclick="openSpecialEvent(2)">
+      <img class="ev-card-img" src="asset/fidel.jpg" alt="Roleta Fidelidade" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#60a5fa;border-color:rgba(59,130,246,.5);background:rgba(59,130,246,.15)">&#x1F195; Agentes &middot; Indique</span>
+        <h3 class="ev-card-name">Roleta Fidelidade</h3>
+        <div class="ev-card-detail">100+ indicados = 4&times; pr&ecirc;mios &middot; iPhone 17</div>
+        <div class="ev-card-prize">Laptop &middot; Smartphones &middot; B&ocirc;nus</div>
+        <div class="ev-card-go" style="color:#60a5fa">&#9654; VER DETALHES &rarr;</div>
+      </div>
+    </div>
+
+    <!-- Roleta Di&aacute;ria -->
+    <div class="ev-card" style="--ec:#E67E22" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
+      <img class="ev-card-img" src="asset/diaria.jpg" alt="Roleta Di&aacute;ria" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#E67E22;border-color:rgba(230,126,34,.5);background:rgba(230,126,34,.15)">&#x1F3B0; Di&aacute;rio</span>
+        <h3 class="ev-card-name">Roleta Di&aacute;ria</h3>
+        <div class="ev-card-detail">5 sess&otilde;es &middot; 15h 17h 19h 21h 23h</div>
+        <div class="ev-card-go" style="color:#E67E22">GRUPO DE EVENTOS &rarr;</div>
+      </div>
+    </div>
+
+    <div class="ev-card" style="--ec:#D4A017" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
+      <img class="ev-card-img" src="asset/comi.jpg" alt="Roleta de Comiss&atilde;o" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#D4A017;border-color:rgba(212,160,23,.5);background:rgba(212,160,23,.15)">&#x1F4BC; Agentes</span>
+        <h3 class="ev-card-name">Roleta de Comiss&atilde;o</h3>
+        <div class="ev-card-detail">155 ganhadores &middot; Sorteio 23h30</div>
+        <div class="ev-card-prize">R$ 300 / R$ 150 / R$ 100</div>
+      </div>
+    </div>
+
+    <!-- Roleta N&iacute;vel VIP -->
+    <div class="ev-card" style="--ec:#9B59B6" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
+      <img class="ev-card-img" src="asset/viplevel.jpg" alt="Roleta N&iacute;vel VIP" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#9B59B6;border-color:rgba(155,89,182,.5);background:rgba(155,89,182,.15)">&#x1F3C5; N&iacute;vel VIP</span>
+        <h3 class="ev-card-name">Roleta N&iacute;vel VIP</h3>
+        <div class="ev-card-detail">B&ocirc;nus ao subir de n&iacute;vel &middot; Cadastro at&eacute; 18h</div>
+        <div class="ev-card-prize">At&eacute; R$ 200 por n&iacute;vel</div>
+      </div>
+    </div>
+
+    <!-- Roleta de Slot -->
+    <div class="ev-card" style="--ec:#E74C3C" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
+      <img class="ev-card-img" src="asset/slot.jpg" alt="Roleta de Slot" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#E74C3C;border-color:rgba(231,76,60,.5);background:rgba(231,76,60,.15)">&#x1F3AE; Jackpot</span>
+        <h3 class="ev-card-name">Roleta de Slot</h3>
+        <div class="ev-card-detail">3 jackpots acima de 50x &middot; Sorteio 23h30</div>
+        <div class="ev-card-prize">x200 aposta (POPBRA)</div>
+      </div>
+    </div>                                
+
+    <!-- Roleta de Anivers&aacute;rio -->
+    <div class="ev-card" style="--ec:#E84393" onclick="window.open('https://t.me/+HbNpi5z2Az41MGRh','_blank')">
+      <img class="ev-card-img" src="asset/parabens.jpg" alt="Roleta Anivers&aacute;rio" loading="lazy">
+      <div class="ev-card-shade"></div>
+      <div class="ev-card-inner">
+        <span class="ev-card-badge" style="color:#E84393;border-color:rgba(232,67,147,.5);background:rgba(232,67,147,.15)">&#x1F382; Toda Quarta</span>
+        <h3 class="ev-card-name">Roleta Anivers&aacute;rio</h3>
+        <div class="ev-card-detail">60 ganhadores &middot; Quarta &agrave;s 17h</div>
+        <div class="ev-card-prize">R$ 50 cada ganhador</div>
+      </div>
+    </div>
+
+    </div>
+    <button class="ev-nav ev-next" id="ev-next" type="button" aria-label="Próximo evento">&#10095;</button>
+  </div>
+  <div class="ev-board-dots" id="ev-board-dots"></div>
+  <div class="ev2-footer reveal">
+    <div class="ev2-links" aria-label="Links da rede">
+      <div class="ev2-links-row">
+        <a href="https://t.me/+LNRfmhCoiOk1NTNh" target="_blank" rel="noopener noreferrer">Grupo VIP Rede POP</a>
+        <span class="ev2-links-sep" aria-hidden="true">&mdash;</span>
+        <a href="https://t.me/+HbNpi5z2Az41MGRh" target="_blank" rel="noopener noreferrer">Grupo de Eventos</a>
+        <span class="ev2-links-sep" aria-hidden="true">&mdash;</span>
+        <a href="https://t.me/+CPn6PVjqsH00ZjNh" target="_blank" rel="noopener noreferrer">Canal Oficial Telegram</a>
+        <span class="ev2-links-sep" aria-hidden="true">&mdash;</span>
+        <a href="https://t.me/+e7zvQV6HHwM4M2M1" target="_blank" rel="noopener noreferrer">Pop Sorte Lottery</a>
+      </div>
+      <div class="ev2-links-row">
+        <a href="https://whatsapp.com/channel/0029Vb28Qqg5vKA15k5FMc1l" target="_blank" rel="noopener noreferrer">WhatsApp VIP</a>
+        <span class="ev2-links-sep" aria-hidden="true">&mdash;</span>
+        <a href="https://www.instagram.com/redepopofficial/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <span class="ev2-links-sep" aria-hidden="true">&mdash;</span>
+        <a href="https://x.com/PopRede" target="_blank" rel="noopener noreferrer">X / Twitter</a>
+        <span class="ev2-links-sep" aria-hidden="true">&mdash;</span>
+        <a href="https://www.facebook.com/vippopbra/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /.ev-container -->
+</section>
+
+<section id="beneficios">
+  <div class="sh reveal">
+    <div><div class="sk">Exclusivo para Membros</div><h2 class="st">Benefícios da Rede POP</h2></div>
+  </div>
+  <div class="benefits-grid reveal" id="b-carousel">
+    <button class="b-nav b-prev" id="benefits-prev" aria-label="Benefício anterior" type="button">&#10094;</button>
+    <div class="benefit-card" data-pos="left" data-link="https://pop-love.shop" data-title="Pop-Love.shop" data-desc="Sorteios exclusivos e presentes grátis para membros da Rede POP." data-img="asset/pop-love.png" onclick="handleBenefitClick(0)">
+      <div class="benefit-img"><img src="asset/pop-love.png" alt="Pop-Love.shop" loading="lazy"></div>
+      <div class="benefit-body">
+        <span class="benefit-badge" style="--bc:#FF3366">🎁 Presentes</span>
+        <h3 class="benefit-name">Pop-Love.shop</h3>
+        <p class="benefit-desc">Sorteios exclusivos e presentes grátis para membros da Rede POP.</p>
+      </div>
+      <span class="benefit-cta" style="--bc:#FF3366">Acessar ↗</span>
+    </div>
+    <div class="benefit-card" data-pos="center" data-link="https://popfood.vip" data-title="POPFOI x McDonald's" data-desc="Recarregue todos os dias e ganhe um Vale McDonald's de presente!" data-img="asset/POPFOOD.jpg" onclick="handleBenefitClick(1)">
+      <div class="benefit-img"><img src="asset/POPFOOD.jpg" alt="POPFOI x McDonald's" loading="lazy"></div>
+      <div class="benefit-body">
+        <span class="benefit-badge" style="--bc:#FFC72C">🍟 Vale Mequi</span>
+        <h3 class="benefit-name">POPFOI x McDonald's</h3>
+        <p class="benefit-desc">Novidade na rede POP! Garanta seu IFOOD do fim do dia!</p>
+      </div>
+      <span class="benefit-cta" style="--bc:#FFC72C">Participar ↗</span>
+    </div>
+    <div class="benefit-card" data-pos="right" data-link="https://www.poprtp.com" data-title="PopRTP.com" data-desc="Análise de RTP ao vivo com sinais e horários quentes atualizados." data-img="asset/rtp.png" onclick="handleBenefitClick(2)">
+      <div class="benefit-img"><img src="asset/rtp.png" alt="PopRTP.com" loading="lazy"></div>
+      <div class="benefit-body">
+        <span class="benefit-badge" style="--bc:#22C55E">📡 RTP</span>
+        <h3 class="benefit-name">PopRTP.com</h3>
+        <p class="benefit-desc">Análise de RTP ao vivo com sinais e horários quentes atualizados.</p>
+      </div>
+      <span class="benefit-cta" style="--bc:#22C55E">Acessar ↗</span>
+    </div>
+    <div class="benefit-card" data-pos="hidden" data-link="https://popsorte.vip" data-title="PopSorte.vip" data-desc="Quina loteria grátis com jackpot acumulado e prêmios diários." data-img="asset/popsorte.png" onclick="handleBenefitClick(3)">
+      <div class="benefit-img"><img src="asset/popsorte.png" alt="PopSorte.vip" loading="lazy"></div>
+      <div class="benefit-body">
+        <span class="benefit-badge" style="--bc:#D4A017">🎟️ Loteria</span>
+        <h3 class="benefit-name">PopSorte.vip</h3>
+        <p class="benefit-desc">Quina loteria grátis com jackpot acumulado e prêmios diários.</p>
+      </div>
+      <span class="benefit-cta" style="--bc:#D4A017">Acessar ↗</span>
+    </div>
+    <div class="benefit-card" data-pos="hidden" data-link="https://www.youtube.com/@PopRede" data-title="POP REDE no YouTube" data-desc="Lives com sorteios, vencedores e prêmios ao vivo — acompanhe o canal oficial." data-img="asset/beneficios4.jpg" onclick="handleBenefitClick(4)">
+      <div class="benefit-img"><img src="asset/beneficios4.jpg" alt="POP REDE no YouTube" loading="lazy"></div>
+      <div class="benefit-body">
+        <span class="benefit-badge" style="--bc:#FF0000">▶ YouTube</span>
+        <h3 class="benefit-name">POP REDE no YouTube</h3>
+        <p class="benefit-desc">Lives com sorteios, vencedores e prêmios ao vivo.</p>
+      </div>
+      <span class="benefit-cta" style="--bc:#FF0000">Acessar ↗</span>
+    </div>
+    <button class="b-nav b-next" id="benefits-next" aria-label="Próximo benefício" type="button">&#10095;</button>
+  </div>
+  <div class="benefits-dots" id="benefits-dots"></div>
+
+  <div class="tm-wrap tm-fullbleed reveal" id="ganhadores-gallery">
+    <button class="tm-nav tm-prev" id="tm-prev" aria-label="Anterior">&#10094;</button>
+    <div class="tm-carousel" id="tm-carousel">
+      <div class="tm-track" id="tm-track"></div>
+    </div>
+    <button class="tm-nav tm-next" id="tm-next" aria-label="Próximo">&#10095;</button>
+  </div>
+  <div class="tm-community reveal">
+      <a class="tm-community-main" href="https://t.me/+LNRfmhCoiOk1NTNh" target="_blank" rel="noopener noreferrer">FAÇA PARTE DA NOSSA COMUNIDADE</a>
+      <div class="tm-community-links">
+        <a class="tm-link-tg" href="https://t.me/+CPn6PVjqsH00ZjNh" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg><span>TELEGRAM CHANNEL</span></a>
+        <a class="tm-link-wa" href="https://whatsapp.com/channel/0029Vb28Qqg5vKA15k5FMc1l" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span>WHATSAPP GROUP</span></a>
+        <a class="tm-link-tg" href="https://t.me/+LNRfmhCoiOk1NTNh" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg><span>TELEGRAM GROUP</span></a>
+      </div>
+      <a class="tm-community-bot" href="https://t.me/PopRedeBot" target="_blank" rel="noopener noreferrer">POP REDE BOT</a>
+  </div>
+</section>
+
+<section id="platforms">
+  <div class="sh reveal">
+    <div><div class="sk">Rede Completa</div><h2 class="st">Escolha sua plataforma</h2></div>
+    <div class="sh-tools">
+      <div class="search-wrap">
+        <div class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <input class="search-input" id="plat-search" type="text" placeholder="Buscar plataforma..." oninput="searchPlatforms(this.value)">
+      </div>
+      <div class="scnt"><strong>23</strong> plataformas ativas</div>
+    </div>
+  </div>
+  <div class="filters">
+    <button class="fb active" data-f="all">Todas</button>
+    <button class="fb" data-f="10">Recarga R$10</button>     
+    <button class="fb" data-f="20">Recarga R$20</button>
+    <button class="fb" data-f="30">Recarga R$30</button>
+  </div>
+  <div class="pgrid" id="pgrid"></div>
+</section>
+
+<section id="mentores-embed" class="mentores-embed-section" aria-label="Mentores POPFOI">
+  <div class="sh reveal">
+    <div>
+      <div class="sk">MENTOR</div>
+      <h2 class="st">Mentores da rede</h2>
+      <p class="mentores-embed-lead">Escolha um mentor e abra a página dele — WhatsApp e Telegram estão em cada card no site incorporado.</p>
+    </div>
+  </div>
+  <!-- Inline size fallbacks: if src/style.css fails to load on the host, iframe defaults to ~300×150px -->
+  <div class="mentores-embed-frame-wrap" style="width:100%;max-width:1200px;margin-left:auto;margin-right:auto;">
+    <iframe
+      class="mentores-embed-iframe"
+      id="agpop-embed-frame"
+      title="POPFOI — Mentores (AGPOP-NEW)"
+      src="https://balpop.github.io/AGPOP-NEW/"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allow="fullscreen"
+      style="width:100%;min-height:480px;height:min(82vh,880px);border:0;display:block;"
+    ></iframe>
+  </div>
+  <p class="mentores-embed-open"><a href="https://balpop.github.io/AGPOP-NEW2/" target="_blank" rel="noopener noreferrer">Abrir mentores em nova aba →</a></p>
+</section>
+
+<section id="ecosystem">
+  <div class="sh reveal"><div><div class="sk">Muito além das plataformas</div><h2 class="st">O Ecossistema POP REDE</h2></div></div>
+  <div class="egrid reveal">
+    <div class="ecard">
+      <span class="e-num">01</span>
+      <div class="e-icon-mob">🌐</div>
+      <div class="e-ph"><div class="e-ph-icon">🌐</div><span class="e-ph-lbl">Placeholder — Comunidade</span></div>
+      <div class="e-tag">Comunidade</div>
+      <h3 class="e-title">Rede de Membros</h3>
+      <p class="e-desc">Comunidade ativa com acesso privilegiado a informações e estratégias em tempo real.</p>
+    </div>
+    <div class="ecard">
+      <span class="e-num">02</span>
+      <div class="e-icon-mob">🎯</div>
+      <div class="e-ph"><div class="e-ph-icon">🎯</div><span class="e-ph-lbl">Placeholder — Mentores</span></div>
+      <div class="e-tag">Mentores</div>
+      <h3 class="e-title">Orientação Especializada</h3>
+      <p class="e-desc">Mentores experientes que guiam sua jornada com suporte estratégico.</p>
+    </div>
+    <div class="ecard">
+      <span class="e-num">03</span>
+      <div class="e-icon-mob">🏆</div>
+      <div class="e-ph"><div class="e-ph-icon">🏆</div><span class="e-ph-lbl">Placeholder — Eventos</span></div>
+      <div class="e-tag">Eventos</div>
+      <h3 class="e-title">Promoções e Torneios</h3>
+      <p class="e-desc">Eventos exclusivos e promoções únicas para membros cadastrados.</p>
+    </div>
+    <div class="ecard">
+      <span class="e-num">04</span>
+      <div class="e-icon-mob">⭐</div>
+      <div class="e-ph"><div class="e-ph-icon">⭐</div><span class="e-ph-lbl">Placeholder — Benefícios</span></div>
+      <div class="e-tag">Benefícios</div>
+      <h3 class="e-title">Vantagens Exclusivas</h3>
+      <p class="e-desc">Bônus especiais e recompensas que crescem conforme você avança.</p>
+    </div>
+  </div>
+</section>
+
+<div class="overlay" id="overlay" onclick="handleOverlay(event)">
+  <div class="modal">
+    <div class="mh"><span class="mk" id="m-title">Acessar Plataforma</span><button class="mclose" onclick="closeModal()">&#x2715;</button></div>
+    <div class="mb">
+      <div class="m-logo-wrap" id="m-logo-wrap"></div>
+      <div class="m-date" id="mdate">&mdash;</div>
+      <div class="m-stats">
+        <div class="m-stat"><span class="m-stat-l">Recarga Mínima</span><span class="m-stat-v" id="mrec">&mdash;</span></div>
+        <div class="m-stat"><span class="m-stat-l">Saque Mínimo</span><span class="m-stat-v" id="mwit">&mdash;</span></div>
+      </div>
+      <div class="m-notice" id="m-notice">Você está acessando esta plataforma através do Oficial POP REDE. Confirme para prosseguir.</div>
+      <div class="m-actions">
+        <button class="m-cancel" onclick="closeModal()">Cancelar</button>
+        <button class="m-confirm" onclick="doAccess()">▶ ACESSAR AGORA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tm-lightbox" id="tm-lightbox" onclick="closeTestimonialLightbox(event)">
+  <button class="tm-lightbox-close" type="button" aria-label="Fechar imagem" onclick="closeTestimonialLightbox()">&times;</button>
+  <img id="tm-lightbox-img" src="" alt="">
+</div>
+
+<footer>
+  <div class="fg">
+    <div><div class="fb-name">POP <span>REDE</span></div><p class="fdesc">Hub central oficial da rede POP. Acesso seguro e verificado para todos os membros cadastrados. Em operação desde 2022.</p></div>
+    <div class="fc"><h4>Plataformas</h4><ul><li><a href="#">POPBRA</a></li><li><a href="#">POPFOI</a></li><li><a href="#">POPPG</a></li><li><a href="#">POPN1</a></li><li><a href="#">POPLUZ</a></li><li><a href="#">Ver todas →</a></li></ul></div>
+    <div class="fc"><h4>Eventos</h4><ul><li><a href="https://t.me/+HbNpi5z2Az41MGRh" target="_blank">Grupo de Eventos</a></li><li><a href="https://t.me/+LNRfmhCoiOk1NTNh" target="_blank">Grupo VIP Rede POP</a></li><li><a href="#">@PopRedeBot</a></li></ul></div>
+    <div class="fc"><h4>Comunidade</h4><ul><li><a href="https://t.me/+CPn6PVjqsH00ZjNh" target="_blank">Canal Oficial Telegram</a></li><li><a href="https://t.me/+KXxgJrpOWaIzMTVh" target="_blank">Grupo VIP Telegram</a></li><li><a href="https://t.me/+e7zvQV6HHwM4M2M1" target="_blank">Pop Sorte Lottery</a></li><li><a href="https://whatsapp.com/channel/0029Vb28Qqg5vKA15k5FMc1l" target="_blank">WhatsApp VIP</a></li></ul></div>
+    <div class="fc"><h4>Suporte</h4><ul><li><a href="#">Central de Ajuda</a></li><li><a href="#">Termos de Uso</a></li><li><a href="#">Privacidade</a></li><li><a href="#">Contato</a></li></ul></div>
+  </div>
+  <div class="fbot">
+    <p>© 2024 <span>POP REDE</span>. Todos os direitos reservados.</p>
+    <div class="f-socials">
+      <a href="https://www.instagram.com/redepopofficial/" target="_blank" class="f-social" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://x.com/PopRede" target="_blank" class="f-social" aria-label="X / Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+      <a href="https://www.facebook.com/vippopbra/" target="_blank" class="f-social" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+      <a href="https://t.me/+CPn6PVjqsH00ZjNh" target="_blank" class="f-social" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+      <a href="https://whatsapp.com/channel/0029Vb28Qqg5vKA15k5FMc1l" target="_blank" class="f-social" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a>
+    </div>
+    <p>Sistema seguro &amp; verificado — Em operação desde <span>2022</span></p>
+  </div>
+</footer>
+
+<script src="src/main.js" defer></script>
+
+<div class="float-btns">
+  <a class="float-btn wa" href="https://wa.popsorte.vip" target="_blank">
+    <div class="float-tooltip">WhatsApp</div>
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.787 23.213l4.287-1.374A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.239 0-4.32-.638-6.081-1.737l-.435-.258-3.083.988.997-3.083-.268-.447A9.938 9.938 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+  </a>
+  <a class="float-btn tg" href="https://t.me/+LNRfmhCoiOk1NTNh" target="_blank">
+    <div class="float-tooltip">Telegram VIP</div>
+    <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+  </a>
+  <a class="float-btn rtp-float" href="https://www.poprtp.com" target="_blank">
+    <div class="float-tooltip">PopRTP.com</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  </a>
+  <a class="float-btn love-float" href="https://pop-love.shop" target="_blank">
+    <div class="float-tooltip">Pop-Love.shop</div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg>
+  </a>
+  <a class="float-btn sorte-float" href="https://popsorte.vip" target="_blank">
+    <div class="float-tooltip">PopSorte.vip</div>
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="white" opacity="0.15"/><circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><circle cx="12" cy="12" r="6" fill="white"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="900" fill="#581c87" font-family="Arial,sans-serif">8</text></svg>
+  </a>
+</div>
+
+<button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mob-nav">
+  <div class="mob-nav-secondary" role="navigation" aria-label="Atalhos rápidos">
+    <a class="mob-nav-quick mob-nav-quick--wa" href="https://wa.popsorte.vip" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
+      <span class="mob-nav-quick-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.787 23.213l4.287-1.374A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.239 0-4.32-.638-6.081-1.737l-.435-.258-3.083.988.997-3.083-.268-.447A9.938 9.938 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg></span>
+    </a>
+    <a class="mob-nav-quick mob-nav-quick--tg" href="https://t.me/+LNRfmhCoiOk1NTNh" target="_blank" rel="noopener noreferrer" title="Telegram VIP" aria-label="Telegram VIP">
+      <span class="mob-nav-quick-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span>
+    </a>
+    <a class="mob-nav-quick mob-nav-quick--rtp" href="https://www.poprtp.com" target="_blank" rel="noopener noreferrer" title="PopRTP.com" aria-label="PopRTP.com">
+      <span class="mob-nav-quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+    </a>
+    <a class="mob-nav-quick mob-nav-quick--love" href="https://pop-love.shop" target="_blank" rel="noopener noreferrer" title="Pop-Love.shop" aria-label="Pop-Love.shop">
+      <span class="mob-nav-quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.98 1.61h9.72a2 2 0 001.98-1.61L23 6H6"/></svg></span>
+    </a>
+    <a class="mob-nav-quick mob-nav-quick--sorte" href="https://popsorte.vip" target="_blank" rel="noopener noreferrer" title="PopSorte.vip" aria-label="PopSorte.vip">
+      <span class="mob-nav-quick-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="white" opacity="0.15"/><circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/><circle cx="12" cy="12" r="6" fill="white"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="900" fill="#581c87" font-family="Arial,sans-serif">8</text></svg></span>
+    </a>
+  </div>
+  <div class="mob-nav-inner">
+    <a class="mob-nav-btn active" data-section="hero" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});setMobActive(this);return false">
+      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <span class="mob-nav-label">Início</span>
+    </a>
+    <a class="mob-nav-btn" data-section="beneficios" href="#beneficios" onclick="setMobActive(this)">
+      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>
+      <span class="mob-nav-label">Benefícios</span>
+    </a>
+    <button class="mob-nav-btn" data-section="eventos" onclick="setMobActive(this);document.getElementById('eventos').scrollIntoView({behavior:'smooth'})">
+      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <span class="mob-nav-label">Eventos</span>
+    </button>
+    <a class="mob-nav-btn" data-section="platforms" href="#platforms" onclick="setMobActive(this)">
+      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <span class="mob-nav-label">Plataformas</span>
+    </a>
+    <a class="mob-nav-btn cta-mob" href="https://t.me/PopRedeBot" target="_blank">
+      <div class="mob-nav-icon"><svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></div>
+      <span class="mob-nav-label">Acessar</span>
+    </a>
+  </div>
+</div>
+
+<div class="ev-popup-overlay" id="ev-popup-overlay" onclick="handleEvOverlay(event)">
+  <div class="ev-popup" id="ev-popup">
+    <div class="ev-popup-header">
+      <span class="ev-popup-kicker">🏆 Eventos Especiais POP REDE</span>
+      <button class="ev-popup-close" onclick="closeEvPopup()">✕</button>
+    </div>
+    <div class="ev-popup-tabs">
+      <button class="ev-tab active" onclick="switchEvTab(0,this)">🎰 RODA DA FORTUNA</button>
+      <button class="ev-tab" onclick="switchEvTab(1,this)">🎉 Roleta da Gratidão</button>
+      <button class="ev-tab" onclick="switchEvTab(2,this)">🎯 Roleta de Fidelidade</button>
+    </div>
+
+    <!-- TAB 0: RODA DA FORTUNA -->
+    <div class="ev-tab-panel active" id="ev-panel-0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+        <div>
+          <img src="asset/rodadafortuna.jpg" alt="Roda da Fortuna" style="width:100%;border-radius:2px;display:block">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Evento semanal</div>
+            <p style="font-size:.88rem;color:var(--dim);line-height:1.55;margin:0;font-weight:300">Live com <strong>50 ganhadores</strong> e prêmios como <strong>iPhone 17 Pro Max</strong>. Participe pelo bot oficial da rede.</p>
+          </div>
+          <div class="ev-rules">
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Necessário seguir as regras do sorteio no grupo</span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Inscrição e confirmação via <strong>@PopRedeBot</strong></span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Contas falsas serão desclassificadas</span></div>
+          </div>
+          <button class="ev-popup-cta" onclick="window.open('https://t.me/PopRedeBot','_blank')">▶ PARTICIPAR AGORA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: ROLETA DA GRATIDÃO -->
+    <div class="ev-tab-panel" id="ev-panel-1">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+        <div>
+          <img src="asset/gratid.jpg" alt="Roleta da Gratidão" style="width:100%;border-radius:2px;display:block">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Plataformas válidas</div>
+            <div class="ev-plats-valid">
+              <div class="ev-plat-chip ev-plat-chip--featured"><img src="asset/bra.png" alt="POPBRA"></div>
+              <div class="ev-plat-chip ev-plat-chip--featured"><img src="asset/foi.png" alt="POPFOI"></div>
+              <div class="ev-plat-chip"><img src="asset/888.png" alt="POP888"></div>
+              <div class="ev-plat-chip"><img src="asset/bem.png" alt="POPBEM"></div>
+              <div class="ev-plat-chip"><img src="asset/lua.png" alt="POPLUA"></div>
+              <div class="ev-plat-chip"><img src="asset/ceu.png" alt="POPCEU"></div>
+              <div class="ev-plat-chip"><img src="asset/pg.png" alt="POPPG"></div>
+              <div class="ev-plat-chip"><img src="asset/678.png" alt="POP678"></div>
+              <div class="ev-plat-chip"><img src="asset/555.png" alt="POP555"></div>
+              <div class="ev-plat-chip"><img src="asset/kkk.png" alt="POPKKK"></div>
+              <div class="ev-plat-chip"><img src="asset/26bet.png" alt="26BET"></div>
+            </div>
+          </div>
+          <div class="ev-rules">
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Necessário ser membro de nível VIP</span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Válido apenas para as plataformas listadas</span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Contas falsas serão desclassificadas</span></div>
+          </div>
+          <div class="ev-reg-box">
+            <div class="ev-reg-label">⏰ Inscrição</div>
+            <div class="ev-reg-val">Até <strong>Terça-feira às 15h</strong><br>via bot: <strong>@PopRedeBot</strong></div>
+          </div>
+          <button class="ev-popup-cta" onclick="window.open('https://t.me/PopRedeBot','_blank')">▶ REGISTRAR AGORA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ROLETA DE FIDELIDADE -->
+    <div class="ev-tab-panel" id="ev-panel-2">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+        <div>
+          <img src="asset/fidel.jpg" alt="Roleta de Fidelidade" style="width:100%;border-radius:2px;display:block">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="ev-prizes-grid" style="margin-bottom:0">
+            <div class="ev-prize-item grand">
+              <span class="ev-prize-label">100+ indicações</span>
+              <span class="ev-prize-val">📱 iPhone 17 Pro Max</span>
+            </div>
+            <div class="ev-prize-item"><span class="ev-prize-label">50–99 indicações</span><span class="ev-prize-val">💻 Laptop</span></div>
+            <div class="ev-prize-item"><span class="ev-prize-label">5–49 indicações — 3x</span><span class="ev-prize-val">📱 Xiaomi / Motorola</span></div>
+          </div>
+          <div class="ev-rules">
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Válido em 1 plataforma por semana</span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Fale com seu mentor para registrar</span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Prêmio pode ser trocado por bônus</span></div>
+            <div class="ev-rule"><div class="ev-rule-dot"></div><span>Violações = desclassificação imediata</span></div>
+          </div>
+          <button class="ev-popup-cta" onclick="window.open('http://pop-agent.com/tg','_blank')">▶ FALAR COM MEU MENTOR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
